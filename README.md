@@ -1,7 +1,7 @@
 # GuckMohl
 
 A multilingual image viewer application built with PySide6 (Qt for Python). Browse, rate, archive, and manage your image collections with ease.
-Image sorting app, which helps you to easily sort your images from vacation, trips or events. Start by having your photos from a hicking trip in one folder. You can either rate them from 1 to 5 stars, archive them (move presented image into a subfolder named archive) or simply delete them. I'm planning on some further features (so mor to come).
+Image sorting app, which helps you to easily sort your images from vacation, trips or events. Start by having your photos from a hicking trip in one folder. You can either rate them from 1 to 5 stars, archive them (move presented image into a subfolder named archive) or simply delete them. I'm planning on some further features (so more to come).
 
 ## Features
 
