@@ -35,6 +35,8 @@
   "delete_error_message": "Error deleting: {error}",
   "settings_title": "Settings",
   "settings_archive_folder": "Archive folder name:",
+  "settings_archive_related_files": "Archive related files with same name (e.g., RAW file when archiving JPG)",
+  "settings_delete_related_files": "Delete related files with same name (e.g., RAW file when deleting JPG)",
   "settings_language": "Language:",
   "settings_invalid_name": "Invalid Name",
   "settings_invalid_chars": "The folder name must not contain the following characters:\n{chars}",

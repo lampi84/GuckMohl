@@ -35,6 +35,8 @@
   "delete_error_message": "删除时出错：{error}",
   "settings_title": "设置",
   "settings_archive_folder": "存档文件夹名称：",
+  "settings_archive_related_files": "存档具有相同名称的相关文件（例如，存档 JPG 时的 RAW 文件）",
+  "settings_delete_related_files": "删除具有相同名称的相关文件（例如，删除 JPG 时的 RAW 文件）",
   "settings_language": "语言：",
   "settings_invalid_name": "无效名称",
   "settings_invalid_chars": "文件夹名称不得包含以下字符：\n{chars}",

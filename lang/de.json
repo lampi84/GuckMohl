@@ -35,6 +35,8 @@
   "delete_error_message": "Fehler beim Löschen: {error}",
   "settings_title": "Einstellungen",
   "settings_archive_folder": "Name des Archiv-Ordners:",
+  "settings_archive_related_files": "Verwandte Dateien mit gleichem Namen archivieren (z.B. RAW-Datei beim Archivieren von JPG)",
+  "settings_delete_related_files": "Verwandte Dateien mit gleichem Namen löschen (z.B. RAW-Datei beim Löschen von JPG)",
   "settings_language": "Sprache:",
   "settings_invalid_name": "Ungültiger Name",
   "settings_invalid_chars": "Der Ordnername darf folgende Zeichen nicht enthalten:\n{chars}",

@@ -35,6 +35,8 @@
   "delete_error_message": "Erreur lors de la suppression: {error}",
   "settings_title": "Paramètres",
   "settings_archive_folder": "Nom du dossier d'archive:",
+  "settings_archive_related_files": "Archiver les fichiers associés avec le même nom (ex., fichier RAW lors de l'archivage de JPG)",
+  "settings_delete_related_files": "Supprimer les fichiers associés avec le même nom (ex., fichier RAW lors de la suppression de JPG)",
   "settings_language": "Langue:",
   "settings_invalid_name": "Nom invalide",
   "settings_invalid_chars": "Le nom du dossier ne doit pas contenir les caractères suivants:\n{chars}",

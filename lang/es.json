@@ -35,6 +35,8 @@
   "delete_error_message": "Error al eliminar: {error}",
   "settings_title": "Configuración",
   "settings_archive_folder": "Nombre de la carpeta de archivo:",
+  "settings_archive_related_files": "Archivar archivos relacionados con el mismo nombre (p.ej., archivo RAW al archivar JPG)",
+  "settings_delete_related_files": "Eliminar archivos relacionados con el mismo nombre (p.ej., archivo RAW al eliminar JPG)",
   "settings_language": "Idioma:",
   "settings_invalid_name": "Nombre inválido",
   "settings_invalid_chars": "El nombre de la carpeta no debe contener los siguientes caracteres:\n{chars}",
