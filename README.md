@@ -76,8 +76,8 @@ Download the latest `GuckMohl.exe` from the [Releases](https://github.com/your-r
 - **Right Arrow / Down Arrow** - Next image
 - **Up Arrow** - Archive current image
 
-### Rating
-- **0-5 (Number keys)** -        # Main application entry point
+# Main application structure
+```
 ├── build.py                     # PyInstaller build script
 ├── requirements.txt             # Python dependencies (pip)
 ├── requirements-build.txt       # Build dependencies (PyInstaller, etc.)
