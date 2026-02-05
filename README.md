@@ -35,9 +35,9 @@ GuckMohl is a practical image sorting application that helps you efficiently org
 
 ### From Source (For Developers)
 
-1. Clone the repository:
+1. Clone or download the repository:
 ```bash
-git clone https://github.com/your-repo/GuckMohl.git
+git clone <repository-url>
 cd GuckMohl
 ```
 
@@ -67,7 +67,7 @@ python main.py
 
 ### Standalone Executable (For Users)
 
-Download the latest `GuckMohl.exe` from the [Releases](https://github.com/your-repo/GuckMohl/releases) page. No Python installation needed!
+Download the latest `GuckMohl.exe` from the Releases section. No Python installation needed!
 
 ## Keyboard Shortcuts
 
@@ -76,17 +76,21 @@ Download the latest `GuckMohl.exe` from the [Releases](https://github.com/your-r
 - **Right Arrow / Down Arrow** - Next image
 - **Up Arrow** - Archive current image
 
-# Main application structure
+# Main Application Structure
+
 ```
+GuckMohl/
 ├── build.py                     # PyInstaller build script
-├── requirements.txt             # Python dependencies (pip)
+├── main.py                      # Main application file
+├── requirements.txt             # Python dependencies
 ├── requirements-build.txt       # Build dependencies (PyInstaller, etc.)
-├── README.md                    # This file
+├── README.md                    # Documentation (English)
 ├── BUILD.md                     # Build instructions (German)
 ├── icon.ico                     # Application icon
+├── GuckMohl.spec                # PyInstaller spec file
 ├── .gitignore                   # Git ignore patterns
 ├── core/                        # Core application logic
-│   ├── __init__.py
+│   ├── __init__.py              # Version information
 │   ├── image_handler.py         # Image loading and display
 │   ├── exif_handler.py          # EXIF metadata (ratings)
 │   ├── file_manager.py          # File operations (archive, delete)
@@ -101,17 +105,6 @@ Download the latest `GuckMohl.exe` from the [Releases](https://github.com/your-r
     ├── fr.json                  # French
     ├── es.json                  # Spanish
     └── zh_CN.json               # Simplified Chinese
-GuckMohl/
-├── main.py              # Main application file
-├── requirements.txt     # Python dependencies
-├── README.md           # This file
-├── .gitignore          # Git ignore patterns
-└── lang/               # Language files
-    ├── en.json         # English translations
-    ├── de.json         # German translations
-    ├── fr.json         # French translations
-    ├── es.json         # Spanish translations
-    └── zh_CN.json      # Simplified Chinese translations
 ```
 
 ## Settings
@@ -145,6 +138,8 @@ The application is organized using a modular architecture:
 - **PySide6** (>=6.6.0) - Qt for Python, native cross-platform GUI framework
 - **Pillow** (>=10.0.0) - Image processing library with EXIF support
 - **piexif** (>=1.1.3) - EXIF metadata manipulation library
+
+See `requirements.txt` for the complete list of dependencies.
 
 ### Build
 - **PyInstaller** - Bundles the application into a standalone .exe for Windows

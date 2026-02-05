@@ -62,6 +62,7 @@
   "compare_title": "比较已标记的图像",
   "compare_empty": "没有标记的图像",
   "compare_count": "{count}个已标记的图像",
+  "compare_info": "点击图像以取消选择它",
   "marked_indicator": "（已标记）",
   "archive_marked_confirm": "存档所有已标记的图像？",
   "delete_marked_confirm": "删除{count}个已标记的图像？",

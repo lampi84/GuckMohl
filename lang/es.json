@@ -62,6 +62,7 @@
   "compare_title": "Comparar Imágenes Marcadas",
   "compare_empty": "Sin imágenes marcadas",
   "compare_count": "{count} imágenes marcadas",
+  "compare_info": "Haz clic en una imagen para deseleccionarla",
   "marked_indicator": "(Marcado)",
   "archive_marked_confirm": "¿Archivar todas las imágenes marcadas?",
   "delete_marked_confirm": "¿Eliminar {count} imágenes marcadas?",

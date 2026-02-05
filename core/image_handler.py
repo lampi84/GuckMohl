@@ -158,6 +158,14 @@ class ImageHandler:
         """Return list of marked image paths"""
         return sorted(list(self.marked_images))
     
+    def unmark_image(self, image_path):
+        """Remove specific image from marked images"""
+        image_path = Path(image_path) if not isinstance(image_path, Path) else image_path
+        if image_path in self.marked_images:
+            self.marked_images.discard(image_path)
+            return True
+        return False
+    
     def clear_marked_images(self):
         """Clear all marked images"""
         self.marked_images.clear()

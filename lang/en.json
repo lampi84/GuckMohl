@@ -62,6 +62,7 @@
   "compare_title": "Compare Marked Images",
   "compare_empty": "No images marked",
   "compare_count": "{count} marked images",
+  "compare_info": "Click on an image to deselect it",
   "marked_indicator": "(Marked)",
   "archive_marked_confirm": "Archive all marked images?",
   "delete_marked_confirm": "Delete all {count} marked images?",

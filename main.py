@@ -9,7 +9,7 @@ from core import __version__
 from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
                                QPushButton, QLabel, QMessageBox, QFileDialog, QSizePolicy, QDialog)
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QAction, QPixmap
+from PySide6.QtGui import QAction, QPixmap, QPainter, QColor, QBrush
 
 from core.translator import Translator
 from core.image_handler import ImageHandler
@@ -311,7 +311,42 @@ class MainWindow(QMainWindow):
         """Scale and display the current image"""
         scaled_pixmap = self.image_handler.scale_pixmap_for_display(self.image_label.size())
         if scaled_pixmap:
+            # Check if current image is marked
+            if self.image_handler.is_current_image_marked():
+                scaled_pixmap = self.add_bookmark_indicator(scaled_pixmap)
             self.image_label.setPixmap(scaled_pixmap)
+    
+    def add_bookmark_indicator(self, pixmap):
+        """Add a bookmark symbol to the top-right corner of the pixmap"""
+        painter = QPainter(pixmap)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        
+        # Bookmark dimensions
+        bookmark_size = 25
+        bookmark_x = pixmap.width() - bookmark_size - 5
+        bookmark_y = 5
+        
+        # Draw bookmark background (green color)
+        bookmark_color = QColor("#4CAF50")
+        painter.fillRect(bookmark_x, bookmark_y, bookmark_size, bookmark_size, bookmark_color)
+        
+        # Draw bookmark triangle (folded corner effect) using fillRect for small triangular shape
+        triangle_color = QColor("#388E3C")  # Darker green
+        painter.fillRect(bookmark_x + bookmark_size - 5, bookmark_y, 5, 5, triangle_color)
+        
+        # Draw a small white dot in the center
+        dot_color = QColor("white")
+        painter.setBrush(QBrush(dot_color))
+        painter.setPen(Qt.PenStyle.NoPen)
+        painter.drawEllipse(
+            bookmark_x + bookmark_size // 2 - 2,
+            bookmark_y + bookmark_size // 2 - 2,
+            4,
+            4
+        )
+        
+        painter.end()
+        return pixmap
     
     def next_image(self):
         """Display next image"""
@@ -386,6 +421,8 @@ class MainWindow(QMainWindow):
         
         self.image_handler.toggle_mark_current_image()
         self.update_button_states()
+        # Refresh the image display to show/hide the bookmark indicator
+        self.scale_and_display_image()
     
     def show_compare_dialog(self):
         """Show comparison dialog with all marked images"""
@@ -401,7 +438,14 @@ class MainWindow(QMainWindow):
         
         # Create and show comparison dialog
         compare_dialog = CompareDialog(self, marked_images, self.translator)
+        # Connect signal for unmarking images
+        compare_dialog.image_unmarked.connect(self.on_image_unmarked)
         compare_dialog.exec()
+    
+    def on_image_unmarked(self, image_path):
+        """Handle image unmarked from compare dialog"""
+        self.image_handler.unmark_image(image_path)
+        self.update_button_states()
     
     def archive_marked_images(self):
         """Archive all marked images"""
