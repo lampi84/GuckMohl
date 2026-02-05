@@ -51,5 +51,20 @@
   "language_german": "Deutsch",
   "language_french": "Français",
   "language_spanish": "Español",
-  "language_chinese": "简体中文"
+  "language_chinese": "简体中文",
+  "button_mark": "Markieren",
+  "button_unmark": "Markierung aufheben",
+  "button_compare": "Markierte vergleichen",
+  "button_archive_marked": "Markierte archivieren",
+  "button_delete_marked": "Markierte löschen",
+  "tooltip_mark": "Bild markieren/Markierung aufheben (Taste M)",
+  "tooltip_compare": "Alle markierten Bilder vergleichen",
+  "compare_title": "Markierte Bilder vergleichen",
+  "compare_empty": "Keine Bilder markiert",
+  "compare_count": "{count} markierte Bilder",
+  "marked_indicator": "(Markiert)",
+  "archive_marked_confirm": "Alle markierten Bilder archivieren?",
+  "delete_marked_confirm": "{count} markierte Bilder löschen?",
+  "archive_marked_success": "{count} Bilder archiviert",
+  "delete_marked_success": "{count} Bilder gelöscht"
 }

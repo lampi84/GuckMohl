@@ -16,7 +16,7 @@ from core.image_handler import ImageHandler
 from core.exif_handler import ExifHandler
 from core.file_manager import FileManager
 from core.settings_manager import SettingsManager
-from ui.dialogs import SettingsDialog
+from ui.dialogs import SettingsDialog, CompareDialog
 
 
 class MainWindow(QMainWindow):
@@ -49,6 +49,8 @@ class MainWindow(QMainWindow):
         self.next_button = None
         self.archive_button = None
         self.delete_button = None
+        self.mark_button = None
+        self.compare_button = None
         self.open_folder_button = None
         
         # Initialize the user interface
@@ -164,10 +166,28 @@ class MainWindow(QMainWindow):
         self.delete_button.setEnabled(False)
         self.delete_button.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         
+        # Mark button
+        self.mark_button = QPushButton()
+        self.mark_button.setText(self.translator.translate("button_mark"))
+        self.mark_button.setToolTip(self.translator.translate("tooltip_mark"))
+        self.mark_button.clicked.connect(self.toggle_mark_image)
+        self.mark_button.setEnabled(False)
+        self.mark_button.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        
+        # Compare button
+        self.compare_button = QPushButton()
+        self.compare_button.setText(self.translator.translate("button_compare"))
+        self.compare_button.setToolTip(self.translator.translate("tooltip_compare"))
+        self.compare_button.clicked.connect(self.show_compare_dialog)
+        self.compare_button.setEnabled(False)
+        self.compare_button.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        
         # Add buttons to layout
         button_layout.addWidget(self.prev_button)
         button_layout.addWidget(self.next_button)
         button_layout.addStretch()
+        button_layout.addWidget(self.mark_button)
+        button_layout.addWidget(self.compare_button)
         button_layout.addWidget(self.archive_button)
         button_layout.addWidget(self.delete_button)
         
@@ -195,6 +215,28 @@ class MainWindow(QMainWindow):
         exit_action.setShortcut("Ctrl+Q")
         exit_action.triggered.connect(self.close)
         file_menu.addAction(exit_action)
+        
+        # Mark menu
+        mark_menu = menubar.addMenu(self.translator.translate("menu_mark"))
+        
+        mark_action = QAction(self.translator.translate("button_mark"), self)
+        mark_action.setShortcut("M")
+        mark_action.triggered.connect(self.toggle_mark_image)
+        mark_menu.addAction(mark_action)
+        
+        compare_action = QAction(self.translator.translate("button_compare"), self)
+        compare_action.triggered.connect(self.show_compare_dialog)
+        mark_menu.addAction(compare_action)
+        
+        mark_menu.addSeparator()
+        
+        archive_marked_action = QAction(self.translator.translate("button_archive_marked"), self)
+        archive_marked_action.triggered.connect(self.archive_marked_images)
+        mark_menu.addAction(archive_marked_action)
+        
+        delete_marked_action = QAction(self.translator.translate("button_delete_marked"), self)
+        delete_marked_action.triggered.connect(self.delete_marked_images)
+        mark_menu.addAction(delete_marked_action)
         
         # Edit menu
         edit_menu = menubar.addMenu(self.translator.translate("menu_edit"))
@@ -336,14 +378,157 @@ class MainWindow(QMainWindow):
             
             self.update_button_states()
     
+    def toggle_mark_image(self):
+        """Toggle mark status for current image"""
+        image_path = self.image_handler.get_current_image_path()
+        if not image_path:
+            return
+        
+        self.image_handler.toggle_mark_current_image()
+        self.update_button_states()
+    
+    def show_compare_dialog(self):
+        """Show comparison dialog with all marked images"""
+        marked_images = self.image_handler.get_marked_images()
+        
+        if not marked_images:
+            QMessageBox.information(
+                self,
+                self.translator.translate("compare_title"),
+                self.translator.translate("compare_empty")
+            )
+            return
+        
+        # Create and show comparison dialog
+        compare_dialog = CompareDialog(self, marked_images, self.translator)
+        compare_dialog.exec()
+    
+    def archive_marked_images(self):
+        """Archive all marked images"""
+        marked_images = self.image_handler.get_marked_images()
+        
+        if not marked_images:
+            QMessageBox.information(
+                self,
+                self.translator.translate("compare_title"),
+                self.translator.translate("compare_empty")
+            )
+            return
+        
+        # Confirmation dialog
+        reply = QMessageBox.question(
+            self,
+            self.translator.translate("archive_success"),
+            self.translator.translate("archive_marked_confirm"),
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+        
+        if reply == QMessageBox.StandardButton.No:
+            return
+        
+        archived_count = 0
+        for image_path in marked_images:
+            try:
+                if self.file_manager.archive_image(image_path, self.archive_folder_name, self, self.archive_related_files):
+                    archived_count += 1
+                    # Remove from displayed list if it's the current image
+                    if self.image_handler.get_current_image_path() == image_path:
+                        self.image_handler.remove_current_image()
+            except Exception as e:
+                print(f"Error archiving {image_path}: {e}")
+        
+        # Clear marked images
+        self.image_handler.clear_marked_images()
+        
+        # Refresh display
+        if self.image_handler.has_images():
+            self.display_current_image()
+        else:
+            self.button_container.setVisible(True)
+            self.image_label.setVisible(False)
+            self.info_label.setText(self.translator.translate("info_no_more_images"))
+        
+        self.update_button_states()
+        
+        # Show success message
+        QMessageBox.information(
+            self,
+            self.translator.translate("archive_success"),
+            self.translator.translate("archive_marked_success", count=archived_count)
+        )
+    
+    def delete_marked_images(self):
+        """Delete all marked images"""
+        marked_images = self.image_handler.get_marked_images()
+        
+        if not marked_images:
+            QMessageBox.information(
+                self,
+                self.translator.translate("compare_title"),
+                self.translator.translate("compare_empty")
+            )
+            return
+        
+        # Confirmation dialog
+        reply = QMessageBox.question(
+            self,
+            self.translator.translate("delete_success"),
+            self.translator.translate("delete_marked_confirm", count=len(marked_images)),
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+        
+        if reply == QMessageBox.StandardButton.No:
+            return
+        
+        deleted_count = 0
+        for image_path in marked_images:
+            try:
+                if self.file_manager.delete_image(image_path, self, self.translator, self.delete_related_files):
+                    deleted_count += 1
+                    # Remove from displayed list if it's the current image
+                    if self.image_handler.get_current_image_path() == image_path:
+                        self.image_handler.remove_current_image()
+            except Exception as e:
+                print(f"Error deleting {image_path}: {e}")
+        
+        # Clear marked images
+        self.image_handler.clear_marked_images()
+        
+        # Refresh display
+        if self.image_handler.has_images():
+            self.display_current_image()
+        else:
+            self.button_container.setVisible(True)
+            self.image_label.setVisible(False)
+            self.info_label.setText(self.translator.translate("info_no_more_images"))
+        
+        self.update_button_states()
+        
+        # Show success message
+        QMessageBox.information(
+            self,
+            self.translator.translate("delete_success"),
+            self.translator.translate("delete_marked_success", count=deleted_count)
+        )
+    
     def update_button_states(self):
         """Update button enabled states based on image availability"""
         has_images = self.image_handler.has_images()
+        has_marked = self.image_handler.get_marked_image_count() > 0
         
         self.prev_button.setEnabled(self.image_handler.can_go_previous())
         self.next_button.setEnabled(self.image_handler.can_go_next())
         self.archive_button.setEnabled(has_images)
         self.delete_button.setEnabled(has_images)
+        self.mark_button.setEnabled(has_images)
+        self.compare_button.setEnabled(has_marked)
+        
+        # Update mark button text based on current image state
+        if has_images:
+            if self.image_handler.is_current_image_marked():
+                self.mark_button.setText(self.translator.translate("button_unmark"))
+            else:
+                self.mark_button.setText(self.translator.translate("button_mark"))
     
     def resizeEvent(self, event):
         """Handle window resize"""
@@ -358,6 +543,8 @@ class MainWindow(QMainWindow):
             self.previous_image()
         elif event.key() == Qt.Key.Key_Up:
             self.archive_current_image()
+        elif event.key() == Qt.Key.Key_M:
+            self.toggle_mark_image()
         elif event.key() == Qt.Key.Key_0:
             self.rate_current_image(0)
         elif event.key() == Qt.Key.Key_1:
@@ -425,6 +612,12 @@ class MainWindow(QMainWindow):
         
         self.delete_button.setText(self.translator.translate("button_delete"))
         self.delete_button.setToolTip(self.translator.translate("tooltip_delete"))
+        
+        self.mark_button.setText(self.translator.translate("button_mark"))
+        self.mark_button.setToolTip(self.translator.translate("tooltip_mark"))
+        
+        self.compare_button.setText(self.translator.translate("button_compare"))
+        self.compare_button.setToolTip(self.translator.translate("tooltip_compare"))
         
         # Recreate menu bar
         self.menuBar().clear()

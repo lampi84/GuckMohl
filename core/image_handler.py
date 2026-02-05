@@ -14,6 +14,7 @@ class ImageHandler:
         self.image_files = []
         self.current_index = 0
         self.current_pixmap = None
+        self.marked_images = set()  # Store marked image paths
     
     def load_images_from_folder(self, folder_path):
         """Load all supported image files from a folder"""
@@ -125,7 +126,9 @@ class ImageHandler:
     def remove_current_image(self):
         """Remove current image from list"""
         if self.image_files and self.current_index < len(self.image_files):
-            self.image_files.pop(self.current_index)
+            removed_image = self.image_files.pop(self.current_index)
+            # Remove from marked images if it was marked
+            self.marked_images.discard(removed_image)
             
             # Adjust index if necessary
             if self.current_index >= len(self.image_files) and self.image_files:
@@ -133,3 +136,32 @@ class ImageHandler:
             
             return True
         return False
+    
+    def toggle_mark_current_image(self):
+        """Toggle mark status for current image"""
+        image_path = self.get_current_image_path()
+        if image_path:
+            if image_path in self.marked_images:
+                self.marked_images.remove(image_path)
+                return False
+            else:
+                self.marked_images.add(image_path)
+                return True
+        return None
+    
+    def is_current_image_marked(self):
+        """Check if current image is marked"""
+        image_path = self.get_current_image_path()
+        return image_path in self.marked_images if image_path else False
+    
+    def get_marked_images(self):
+        """Return list of marked image paths"""
+        return sorted(list(self.marked_images))
+    
+    def clear_marked_images(self):
+        """Clear all marked images"""
+        self.marked_images.clear()
+    
+    def get_marked_image_count(self):
+        """Return number of marked images"""
+        return len(self.marked_images)

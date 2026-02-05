@@ -51,5 +51,20 @@
   "language_german": "Deutsch",
   "language_french": "Français",
   "language_spanish": "Español",
-  "language_chinese": "简体中文"
+  "language_chinese": "简体中文",
+  "button_mark": "Mark",
+  "button_unmark": "Unmark",
+  "button_compare": "Compare Marked",
+  "button_archive_marked": "Archive Marked",
+  "button_delete_marked": "Delete Marked",
+  "tooltip_mark": "Mark/Unmark image (M key)",
+  "tooltip_compare": "Compare all marked images",
+  "compare_title": "Compare Marked Images",
+  "compare_empty": "No images marked",
+  "compare_count": "{count} marked images",
+  "marked_indicator": "(Marked)",
+  "archive_marked_confirm": "Archive all marked images?",
+  "delete_marked_confirm": "Delete all {count} marked images?",
+  "archive_marked_success": "Archived {count} images",
+  "delete_marked_success": "Deleted {count} images"
 }

@@ -1,9 +1,11 @@
 """UI dialogs for GuckMohl"""
 from pathlib import Path
+from PIL import Image, ImageQt
 from PySide6.QtWidgets import (QDialog, QFormLayout, QLabel, QPushButton, QHBoxLayout, 
-                               QComboBox, QDialogButtonBox, QInputDialog, QMessageBox, QCheckBox, QVBoxLayout)
+                               QComboBox, QDialogButtonBox, QInputDialog, QMessageBox, QCheckBox, QVBoxLayout,
+                               QGridLayout, QScrollArea, QWidget)
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QFont
+from PySide6.QtGui import QFont, QPixmap
 
 
 class SettingsDialog(QDialog):
@@ -106,3 +108,99 @@ class SettingsDialog(QDialog):
             'archive_related_files': self.archive_related_files_checkbox.isChecked(),
             'delete_related_files': self.delete_related_files_checkbox.isChecked()
         }
+
+class CompareDialog(QDialog):
+    """Dialog for comparing marked images in a grid layout"""
+    
+    def __init__(self, parent, marked_image_paths, translator):
+        super().__init__(parent)
+        self.translator = translator
+        self.marked_image_paths = marked_image_paths
+        self.setWindowTitle(self.translator.translate("compare_title"))
+        self.setMinimumSize(900, 700)
+        
+        layout = QVBoxLayout()
+        
+        # Title with image count
+        count_text = self.translator.translate("compare_count", count=len(marked_image_paths))
+        title_label = QLabel(count_text)
+        title_font = QFont()
+        title_font.setPointSize(title_font.pointSize() + 2)
+        title_font.setBold(True)
+        title_label.setFont(title_font)
+        layout.addWidget(title_label)
+        
+        # Create scroll area for image grid
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        
+        # Grid widget and layout
+        grid_widget = QWidget()
+        grid_layout = QGridLayout(grid_widget)
+        grid_layout.setSpacing(10)
+        
+        # Add images in grid (4 columns)
+        columns = 4
+        row = 0
+        col = 0
+        
+        for image_path in marked_image_paths:
+            # Create container for each image
+            image_container = self.create_image_thumbnail(image_path)
+            grid_layout.addWidget(image_container, row, col)
+            
+            col += 1
+            if col >= columns:
+                col = 0
+                row += 1
+        
+        # Add stretch to fill remaining rows
+        grid_layout.setRowStretch(row + 1, 1)
+        scroll_area.setWidget(grid_widget)
+        layout.addWidget(scroll_area)
+        
+        # Close button
+        close_button = QPushButton(self.translator.translate("button_back"))
+        close_button.clicked.connect(self.close)
+        layout.addWidget(close_button)
+        
+        self.setLayout(layout)
+    
+    def create_image_thumbnail(self, image_path):
+        """Create a thumbnail widget for an image"""
+        container = QWidget()
+        container_layout = QVBoxLayout(container)
+        
+        try:
+            # Load and scale image
+            pil_image = Image.open(str(image_path))
+            pil_image.thumbnail((200, 200), Image.Resampling.LANCZOS)
+            qimage = ImageQt.ImageQt(pil_image)
+            pixmap = QPixmap.fromImage(qimage)
+            
+            # Create image label
+            image_label = QLabel()
+            image_label.setPixmap(pixmap)
+            image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            
+            # Create filename label
+            filename_label = QLabel(image_path.name)
+            filename_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            filename_font = QFont()
+            filename_font.setPointSize(filename_font.pointSize() - 1)
+            filename_label.setFont(filename_font)
+            filename_label.setWordWrap(True)
+            
+            container_layout.addWidget(image_label)
+            container_layout.addWidget(filename_label)
+            
+        except Exception as e:
+            # Show error label if image cannot be loaded
+            error_label = QLabel(f"Error loading:\n{image_path.name}")
+            error_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            error_font = QFont()
+            error_font.setPointSize(error_font.pointSize() - 1)
+            error_label.setFont(error_font)
+            container_layout.addWidget(error_label)
+        
+        return container

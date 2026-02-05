@@ -51,5 +51,20 @@
   "language_german": "Deutsch",
   "language_french": "Français",
   "language_spanish": "Español",
-  "language_chinese": "简体中文"
+  "language_chinese": "简体中文",
+  "button_mark": "Marcar",
+  "button_unmark": "Desmarcar",
+  "button_compare": "Comparar Marcados",
+  "button_archive_marked": "Archivar Marcados",
+  "button_delete_marked": "Eliminar Marcados",
+  "tooltip_mark": "Marcar/desmarcar imagen (tecla M)",
+  "tooltip_compare": "Comparar todas las imágenes marcadas",
+  "compare_title": "Comparar Imágenes Marcadas",
+  "compare_empty": "Sin imágenes marcadas",
+  "compare_count": "{count} imágenes marcadas",
+  "marked_indicator": "(Marcado)",
+  "archive_marked_confirm": "¿Archivar todas las imágenes marcadas?",
+  "delete_marked_confirm": "¿Eliminar {count} imágenes marcadas?",
+  "archive_marked_success": "{count} imágenes archivadas",
+  "delete_marked_success": "{count} imágenes eliminadas"
 }
